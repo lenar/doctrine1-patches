@@ -1,0 +1,13 @@
+Index: Doctrine/lib/Doctrine/Connection/UnitOfWork.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Connection/UnitOfWork.php	2010-12-02 17:51:38.245920236 +0200
++++ Doctrine/lib/Doctrine/Connection/UnitOfWork.php	2010-12-02 17:51:46.505067044 +0200
+@@ -404,7 +404,7 @@
+                 $obj = $record->get($rel->getAlias());
+ 
+                 // Protection against infinite function recursion before attempting to save
+-                if ($obj instanceof Doctrine_Record && $obj->isModified()) {
++                if ($obj instanceof Doctrine_Record && $obj->isModified(true)) {
+                     $obj->save($this->conn);
+ 
+                     $id = array_values($obj->identifier());

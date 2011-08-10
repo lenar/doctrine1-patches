@@ -1,0 +1,13 @@
+Index: Doctrine/lib/Doctrine/Validator/Notblank.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Validator/Notblank.php	2009-12-13 17:43:39.556260386 +0200
++++ Doctrine/lib/Doctrine/Validator/Notblank.php	2009-12-13 17:44:55.576761172 +0200
+@@ -41,6 +41,6 @@
+      */
+     public function validate($value)
+     {
+-        return (trim($value) !== '' && $value !== null);
++        return (trim($value) !== '' || is_null($value));
+     }
+ }
+\ No newline at end of file

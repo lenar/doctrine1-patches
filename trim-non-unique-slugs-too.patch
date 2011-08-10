@@ -1,0 +1,18 @@
+Index: Doctrine/lib/Doctrine/Template/Listener/Sluggable.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Template/Listener/Sluggable.php	2011-03-21 16:09:24.946144000 +0200
++++ Doctrine/lib/Doctrine/Template/Listener/Sluggable.php	2011-03-21 16:09:33.796144001 +0200
+@@ -121,6 +121,13 @@
+             $value = substr($value, 0, -1);
+         }
+ 
++        // If slug is longer then the column length then we need to trim it
++        // and try to generate a unique slug again
++        $length = $record->getTable()->getFieldLength($this->_options['name']);
++        if (strlen($value) > $length) {
++            $value = substr($value, 0, $length);
++        }
++
+     	if ($this->_options['unique'] === true) {
+     		return $this->getUniqueSlug($record, $value);
+     	}

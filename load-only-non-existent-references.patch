@@ -1,0 +1,18 @@
+Index: Doctrine/lib/Doctrine/Record.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Record.php	2011-03-21 16:08:57.216144000 +0200
++++ Doctrine/lib/Doctrine/Record.php	2011-03-21 16:09:07.726144001 +0200
+@@ -2361,8 +2361,11 @@
+      */
+     public function loadReference($name)
+     {
+-        $rel = $this->_table->getRelation($name);
+-        $this->_references[$name] = $rel->fetchRelatedFor($this);
++        if (!isset($this->_references[$name]) || $this->_references[$name] === self::$_null)
++        {
++            $rel = $this->_table->getRelation($name);
++            $this->_references[$name] = $rel->fetchRelatedFor($this);
++        }
+     }
+ 
+     /**

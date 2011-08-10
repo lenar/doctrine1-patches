@@ -1,0 +1,122 @@
+Index: Doctrine/lib/Doctrine/Collection.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Collection.php	2011-08-10 12:40:38.375193373 +0300
++++ Doctrine/lib/Doctrine/Collection.php	2011-08-10 12:48:43.325193213 +0300
+@@ -37,6 +37,7 @@
+      * @var array $data                     an array containing the records of this collection
+      */
+     protected $data = array();
++    protected $oids = array();
+ 
+     /**
+      * @var Doctrine_Table $table           each collection has only records of specified table
+@@ -140,6 +141,11 @@
+     public function setData(array $data) 
+     {
+         $this->data = $data;
++        $oids = array();
++        foreach ($data as $record) {
++            $oids[$record->getOid()] = true;
++        }
++        $this->oids = $oids;
+     }
+ 
+     /**
+@@ -179,6 +185,12 @@
+             $this->$name = $values;
+         }
+ 
++        $oids = array();
++        foreach ($this->data as $record) {
++          $oids[$record->oid()] = true;
++        }
++        $this->oids = $oids;
++
+         $this->_table = $connection->getTable($this->_table);
+ 
+         $keyColumn = isset($array['keyColumn']) ? $array['keyColumn'] : null;
+@@ -313,6 +325,7 @@
+         $removed = $this->data[$key];
+ 
+         unset($this->data[$key]);
++        unset($this->oids[$removed->oid()]);
+         return $removed;
+     }
+ 
+@@ -335,7 +348,7 @@
+      */
+     public function search(Doctrine_Record $record)
+     {
+-        return array_search($record, $this->data, true);
++        return isset($this->oids[$record->oid()]);
+     }
+ 
+     /**
+@@ -373,6 +386,7 @@
+             } else {
+                 $this->data[$key] = $record;      	
+             }
++            $this->oids[$record->oid()] = true;
+ 
+             if (isset($this->keyColumn)) {
+                 $record->set($this->keyColumn, $key);
+@@ -439,6 +453,7 @@
+         }
+ 
+         $this->data[$key] = $record;
++        $this->oids[$record->oid()] = true;
+     }
+ 
+     /**
+@@ -465,15 +480,10 @@
+                 }
+             }
+         }
+-        /**
+-         * for some weird reason in_array cannot be used here (php bug ?)
+-         *
+-         * if used it results in fatal error : [ nesting level too deep ]
+-         */
+-        foreach ($this->data as $val) {
+-            if ($val === $record) {
+-                return false;
+-            }
++
++        $oid = $record->oid();
++        if (isset($this->oids[$oid])) {
++            return false;
+         }
+ 
+         if (isset($key)) {
+@@ -481,6 +491,7 @@
+                 return false;
+             }
+             $this->data[$key] = $record;
++            $this->oids[$oid] = true;
+             return true;
+         }
+ 
+@@ -493,6 +504,7 @@
+         } else {
+             $this->data[] = $record;
+         }
++        $this->oids[$oid] = true;
+ 
+         return true;
+     }
+@@ -1036,6 +1048,7 @@
+     public function clear()
+     {
+         $this->data = array();
++        $this->oids = array();
+     }
+ 
+     /**
+@@ -1054,6 +1067,7 @@
+         }
+ 
+         $this->data = array();
++        $this->oids = array();
+ 
+         if ($this->reference) {
+             $this->reference->free($deep);

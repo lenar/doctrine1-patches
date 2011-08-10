@@ -1,0 +1,24 @@
+Index: Doctrine/lib/Doctrine/Connection/UnitOfWork.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Connection/UnitOfWork.php	2011-03-21 16:08:56.786144000 +0200
++++ Doctrine/lib/Doctrine/Connection/UnitOfWork.php	2011-03-21 16:09:10.846144001 +0200
+@@ -113,7 +113,7 @@
+                     }
+                     $record->resetPendingUnlinks();
+ 
+-                    $record->invokeSaveHooks('post', 'save', $event);
++                    // $record->invokeSaveHooks('post', 'save', $event);
+                 } else {
+                     $conn->transaction->addInvalid($record);
+                 }
+@@ -145,6 +145,10 @@
+ 
+             $record->state($state);
+ 
++            if ($isValid) {
++                $record->invokeSaveHooks('post', 'save', $event);
++            }
++
+             $conn->commit();
+         } catch (Exception $e) {
+             // Make sure we roll back our internal transaction

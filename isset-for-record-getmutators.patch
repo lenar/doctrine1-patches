@@ -1,0 +1,13 @@
+Index: Doctrine/lib/Doctrine/Record.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Record.php	2011-03-21 16:09:17.506144000 +0200
++++ Doctrine/lib/Doctrine/Record.php	2011-03-21 16:09:28.816144000 +0200
+@@ -1309,7 +1309,7 @@
+     public function getMutators()
+     {
+         $componentName = $this->_table->getComponentName();
+-        return self::$_customMutators[$componentName];
++        return isset(self::$_customMutators[$componentName]) ? self::$_customMutators[$componentName] : array();
+     }
+ 
+     /**

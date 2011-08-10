@@ -1,0 +1,49 @@
+Index: Doctrine/lib/Doctrine/Table.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Table.php	2011-03-21 16:08:54.216144000 +0200
++++ Doctrine/lib/Doctrine/Table.php	2011-03-21 16:09:26.186144001 +0200
+@@ -227,6 +227,8 @@
+      */
+     protected $record;
+ 
++    protected $_relationIdentifiers;
++
+     /**
+      * the constructor
+      *
+@@ -1011,6 +1013,21 @@
+         return $this->_parser->getRelations();
+     }
+ 
++    public function getRelationIdentifiers()
++    {
++        if (isset($this->_relationIdentifiers))
++        {
++            return $this->_relationIdentifiers;
++        }
++
++        $this->_relationIdentifiers = array();
++        foreach($this->getRelations() as $relation)
++        {
++            $this->_relationIdentifiers[$relation->getLocalFieldName()] = $relation->getAlias();
++        }
++        return $this->_relationIdentifiers;
++    }
++
+     /**
+      * Creates a query on this table.
+      *
+@@ -2048,6 +2065,13 @@
+                     return $errorStack;
+                 }
+             }
++	} else if (array_key_exists($fieldName, $this->getRelationIdentifiers()) && $record !== null) {
++            $r = $this->_relationIdentifiers[$fieldName];
++            // Related record is not saved yet
++            if (!$record->$r->exists())
++            {
++                return $errorStack;
++            }
+         }
+ 
+         $dataType = $this->getTypeOf($fieldName);

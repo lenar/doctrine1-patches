@@ -1,0 +1,16 @@
+Index: Doctrine/lib/Doctrine/Search/Listener.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Search/Listener.php	2009-07-09 11:44:46.753266575 +0300
++++ Doctrine/lib/Doctrine/Search/Listener.php	2009-07-09 11:50:56.218653995 +0300
+@@ -47,7 +47,10 @@
+     {
+         $record = $event->getInvoker(); 
+ 
+-        $this->_search->updateIndex($record->toArray()); 
++        if (array_intersect_key(array_flip($this->_search->getOption('fields')), $record->getLastModified()))
++        {
++            $this->_search->updateIndex($record->toArray()); 
++        }
+     }
+ 
+     public function postInsert(Doctrine_Event $event)

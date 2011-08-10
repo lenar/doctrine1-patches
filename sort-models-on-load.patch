@@ -1,0 +1,40 @@
+Index: Doctrine/lib/Doctrine/Import/Schema.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Import/Schema.php	2011-03-21 16:08:57.656144000 +0200
++++ Doctrine/lib/Doctrine/Import/Schema.php	2011-03-21 16:09:02.886144000 +0200
+@@ -234,8 +234,13 @@
+             } else if (is_dir($s)) {
+                 $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($s),
+                                                       RecursiveIteratorIterator::LEAVES_ONLY);
++                $files = array();
++                foreach ($it as $pathName => $file) {
++                    $files[$pathName] = $file;
++                }
++                ksort($files);
+ 
+-                foreach ($it as $file) {
++                foreach ($files as $file) {
+                     $e = explode('.', $file->getFileName());
+                     if (end($e) === $format) {
+                         $array = array_merge($array, $this->parseSchema($file->getPathName(), $format));
+Index: Doctrine/lib/Doctrine/Core.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Core.php	2011-03-21 16:08:57.666144000 +0200
++++ Doctrine/lib/Doctrine/Core.php	2011-03-21 16:09:02.886144000 +0200
+@@ -641,8 +641,14 @@
+ 
+                 $it = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir),
+                                                         RecursiveIteratorIterator::LEAVES_ONLY);
+-                                                        
+-                foreach ($it as $file) {
++
++                $files = array();
++                foreach ($it as $pathName => $file) {
++                    $files[$pathName] = $file;
++                }
++                ksort($files);
++
++                foreach ($files as $file) {
+                     $e = explode('.', $file->getFileName());
+                     
+                     if (end($e) === 'php' && strpos($file->getFileName(), '.inc') === false) {

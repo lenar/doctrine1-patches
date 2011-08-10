@@ -1,0 +1,12 @@
+Index: Doctrine/lib/Doctrine/Search.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Search.php	2009-08-07 20:11:05.826215960 +0300
++++ Doctrine/lib/Doctrine/Search.php	2009-08-07 20:21:18.402215641 +0300
+@@ -298,5 +298,7 @@
+                                              ));
+ 
+         $this->hasColumns($columns);
++        
++        $this->index('keyword', array('fields' => array('keyword')));
+     }
+ }

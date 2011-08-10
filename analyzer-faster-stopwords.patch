@@ -1,0 +1,27 @@
+Index: Doctrine/lib/Doctrine/Search/Analyzer/Standard.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Search/Analyzer/Standard.php	2009-06-15 10:01:42.000000000 +0300
++++ Doctrine/lib/Doctrine/Search/Analyzer/Standard.php	2009-06-18 10:37:43.000000000 +0300
+@@ -263,6 +263,13 @@
+ 
+     public function analyze($text, $encoding = null)
+     {
++        static $stopwords;
++
++        if (!isset($stopwords))
++        {
++            $stopwords = array_flip(self::$_stopwords);
++        }
++
+         $text = preg_replace('/[\'`´"]/', '', $text);
+         $text = Doctrine_Inflector::unaccent($text);
+         $text = preg_replace('/[^A-Za-z0-9]/', ' ', $text);
+@@ -278,7 +285,7 @@
+                 }
+                 $lower = strtolower(trim($term));
+ 
+-                if (in_array($lower, self::$_stopwords)) {
++                if (isset($stopwords[$lower])) {
+                     continue;
+                 }
+ 

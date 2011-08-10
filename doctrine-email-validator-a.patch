@@ -1,0 +1,13 @@
+Index: Doctrine/lib/Doctrine/Validator/Email.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Validator/Email.php	2010-08-06 18:02:39.784761260 +0300
++++ Doctrine/lib/Doctrine/Validator/Email.php	2010-08-06 18:02:55.384761195 +0300
+@@ -111,7 +111,7 @@
+             
+             return false;
+         } else if (function_exists('checkdnsrr')) {
+-            return checkdnsrr($host, 'MX');
++            return checkdnsrr($host, 'MX') || checkdnsrr($host, 'A');
+         }
+         
+         throw new Doctrine_Exception('Could not retrieve DNS record information. Remove check_mx = true to prevent this warning');

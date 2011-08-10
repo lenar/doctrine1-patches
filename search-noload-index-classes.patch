@@ -1,0 +1,13 @@
+Index: Doctrine/lib/Doctrine/Search.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Search.php	2009-06-17 17:01:40.000000000 +0300
++++ Doctrine/lib/Doctrine/Search.php	2009-06-17 17:01:48.000000000 +0300
+@@ -285,7 +285,7 @@
+ 
+         $className = $this->getOption('className');
+ 
+-        if (class_exists($className)) {
++        if (class_exists($className, false)) {
+             return false;
+         }
+ 

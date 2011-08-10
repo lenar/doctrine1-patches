@@ -1,0 +1,13 @@
+Index: Doctrine/lib/Doctrine/Search.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Search.php	2011-03-21 16:09:14.986144001 +0200
++++ Doctrine/lib/Doctrine/Search.php	2011-03-21 16:09:31.296144001 +0200
+@@ -320,7 +320,7 @@
+         // So that 'keyword' is the first field in the table
+         $previousIdentifier = array();
+         foreach ($this->_table->getIdentifier() as $name) {
+-            $previousIdentifier[$name] = $this->_table->getColumnDefinition($name);
++            $previousIdentifier[$name] = $this->_table->getColumnDefinition($this->_table->getColumnName($name));
+             $this->_table->removeColumn($name);
+         }
+ 

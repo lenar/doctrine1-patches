@@ -1,0 +1,27 @@
+Index: Doctrine/lib/Doctrine/Template/Listener/Sluggable.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Template/Listener/Sluggable.php	2009-11-30 20:52:54.000000000 +0200
++++ Doctrine/lib/Doctrine/Template/Listener/Sluggable.php	2009-12-04 12:48:38.554366663 +0200
+@@ -75,9 +75,9 @@
+      */
+     public function preUpdate(Doctrine_Event $event)
+     {
++        $record = $event->getInvoker();
++        $name = $record->getTable()->getFieldName($this->_options['name']);
+         if (false !== $this->_options['unique']) {
+-            $record = $event->getInvoker();
+-            $name = $record->getTable()->getFieldName($this->_options['name']);
+ 
+             if ( ! $record->$name || (
+                 false !== $this->_options['canUpdate'] &&
+@@ -91,6 +91,10 @@
+                 $record->$name = $this->buildSlugFromSlugField($record);
+             }
+         }
++        elseif (false !== $this->_options['canUpdate'])
++        {
++            $record->$name = $this->buildSlugFromFields($record);
++        }
+     }
+ 
+     /**

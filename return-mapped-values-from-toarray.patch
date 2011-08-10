@@ -1,0 +1,13 @@
+Index: Doctrine/lib/Doctrine/Record.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Record.php	2011-03-21 16:09:07.726144001 +0200
++++ Doctrine/lib/Doctrine/Record.php	2011-03-21 16:09:17.506144000 +0200
+@@ -1930,7 +1930,7 @@
+         // [FIX] Prevent mapped Doctrine_Records from being displayed fully
+         foreach ($this->_values as $key => $value) {
+             $a[$key] = ($value instanceof Doctrine_Record || $value instanceof Doctrine_Collection)
+-                ? $value->toArray($deep, $prefixKey) : $value;
++                ? $value->toArray($deep, $prefixKey) : $this->get($key);
+         }
+ 
+         $this->_state = $stateBeforeLock;

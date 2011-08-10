@@ -1,0 +1,17 @@
+Index: Doctrine/lib/Doctrine/Table.php
+===================================================================
+--- Doctrine.orig/lib/Doctrine/Table.php	2011-03-21 16:09:26.186144001 +0200
++++ Doctrine/lib/Doctrine/Table.php	2011-03-21 16:09:38.326144001 +0200
+@@ -2065,10 +2065,10 @@
+                     return $errorStack;
+                 }
+             }
+-	} else if (array_key_exists($fieldName, $this->getRelationIdentifiers()) && $record !== null) {
++        } else if (array_key_exists($fieldName, $this->getRelationIdentifiers()) && $record !== null) {
+             $r = $this->_relationIdentifiers[$fieldName];
+             // Related record is not saved yet
+-            if (!$record->$r->exists())
++            if (!$record->hasReference($r) || !$record->$r->exists())
+             {
+                 return $errorStack;
+             }
